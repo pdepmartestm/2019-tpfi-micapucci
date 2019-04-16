@@ -4,31 +4,34 @@ botin "Anne Bonny" = [("doblones", 100), ("arena", 1)]
 botin "Elizabeth Swann" = [("moneda cofre muerto", 100), ("espada de hierro", 50)]
 botin "Will Turner" = [("cuchillo", 5)]
 
-///TESOROS PIRATAS
+--TESOROS PIRATAS
 
-///cantidad de tesoros
+--cantidad de tesoros
 	cant_tesoros pirata = length (botin pirata)
 	
-///pirata afortunado
-	valor_tesoros pirata = sum (map snd (snd pirata)) ///sum funcion definida de suma.map aplica a TODO. snd selecciona el segundo de la tupla.
+--pirata afortunado
+	valor_tesoros pirata = sum (map snd (snd pirata)) 
+	--sum funcion definida de suma.map aplica a TODO. snd selecciona el segundo de la tupla.
 	pirata_afortunado pirata = valor_tesoros > 10000
 
-///piratas con igual tesoro
-	mismoNombreDistintoValor (n1, v1) (n2, v2) = elem[(n1 == n2) && (v1 /= v2)] ///???
+--piratas con igual tesoro
+	mismoNombreDistintoValor pirata1 pirata2 = any (lotiene pirata 2) (tesoro pirata1)
+	lotiene pirata tesoro = any (IdemTesoroNoValor tesoro) (tesoro pirata)
+	IdemTesoroNoValor (nombre1, valor1) (nombre2, valor2) = nombre1 == nombre2
 	
-///valor de tesoro mas valioso
+--valor de tesoro mas valioso
 	tesoro_mayor pirata = maximum(map snd snd)
 	
-///adquirir tesoro
+--adquirir tesoro
 	tesoro_nuevo pirata (nombre, valor) = (botin pirata) ++ [(nombre, valor)]
 
-///pirata pierde valiosos
+--pirata pierde valiosos
 	tesoro_valioso (nombre, valor) = valor > 100
 	tesoro_menos_valioso (nombre, valor) = filter (not . tesoroEsValioso) (botin pirata)
 	
-///pirata pierde x tesoros
+--pirata pierde x tesoros
 	tesoro_nombre (nombre, tesoro) = nombre == x
 	tesoro_menos_x (nombre, valor) = filter (not . tesoro_nombre) (botin pirata)
 	
 
-///TEMPORADA DE SAQUEOS
+--TEMPORADA DE SAQUEOS
