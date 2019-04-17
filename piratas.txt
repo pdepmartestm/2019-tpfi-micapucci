@@ -4,7 +4,7 @@ botin "Anne Bonny" = [("doblones", 100), ("arena", 1)]
 botin "Elizabeth Swann" = [("moneda cofre muerto", 100), ("espada de hierro", 50)]
 botin "Will Turner" = [("cuchillo", 5)]
 
---TESOROS PIRATAS
+------------------------------------TESOROS PIRATAS
 
 --cantidad de tesoros
 	cant_tesoros pirata = length (botin pirata)
@@ -15,23 +15,46 @@ botin "Will Turner" = [("cuchillo", 5)]
 	pirata_afortunado pirata = valor_tesoros > 10000
 
 --piratas con igual tesoro
-	mismoNombreDistintoValor pirata1 pirata2 = any (lotiene pirata 2) (tesoro pirata1)
-	lotiene pirata tesoro = any (IdemTesoroNoValor tesoro) (tesoro pirata)
-	IdemTesoroNoValor (nombre1, valor1) (nombre2, valor2) = nombre1 == nombre2
+	mismoN_distintoV pirata1 pirata2 = any (lotiene pirata 2) (tesoro pirata1)
+	lotiene pirata tesoro = any (IdemT_noV) (tesoro pirata)
+	IdemT_noV (nombre1, valor1) (nombre2, valor2) = nombre1 == nombre2
 	
 --valor de tesoro mas valioso
-	tesoro_mayor pirata = maximum(map snd snd)
+	tesoro_mayor pirata = maximum(map snd snd) --snd segundo elemento de la tupla
 	
 --adquirir tesoro
 	tesoro_nuevo pirata (nombre, valor) = (botin pirata) ++ [(nombre, valor)]
 
---pirata pierde valiosos
+-- tesoros valiosos
 	tesoro_valioso (nombre, valor) = valor > 100
+	
+-- pirata pierde tesoos valiosos
 	tesoro_menos_valioso (nombre, valor) = filter (not . tesoroEsValioso) (botin pirata)
 	
---pirata pierde x tesoros
+-- tesoro x
 	tesoro_nombre (nombre, tesoro) = nombre == x
+	
+--pirata pierde x tesoros
 	tesoro_menos_x (nombre, valor) = filter (not . tesoro_nombre) (botin pirata)
 	
 
---TEMPORADA DE SAQUEOS
+------------------------------------TEMPORADA DE SAQUEOS
+
+-- solo tesoros valiosos, solo tesoros con x nombre, o ambas. mostrar como queda el tesoro al final
+
+	saquearTesorosValiosos tesoro = filter(tesoro_valioso) tesoro --filter: returns a list constructed from members of a list (the second argument) fulfilling a condition given by the first argument
+	saquearTesorosX tesoro = filter(tesoro_nombre) tesoro
+	saquearCorazon tesoro = []
+	
+	saqueo_v_n x (n, v) = [saquearTesorosValiosos (v, n) || saquearTesorosX x(v, n)]
+	saqueo_combinado tesoro = filter(saqueo_v_n) tesoro
+	saquear pirata forma tesoro = (botin pirata) ++ (forma tesoro)
+	
+------------------------------------NAVEGANDO LOS 7 MARES
+
+tripulación "Perla Negra" =[("Jack Sparrow"), ("Anne Bonny")]
+tripulación "Holandés Errante" = [("David Jones")]
+
+pirata_entra pirata barco = (tripulación barco) ++ pirata -- barco "Perla Negra", "Holandés Errante"
+
+pirata_sale pirata barco = filter (pirata /=) (tripulacion barco)
