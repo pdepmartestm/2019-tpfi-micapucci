@@ -1,6 +1,7 @@
 type Botin = ([Char], Integer)
 type Pirata = ([Char], [Botin])
 type Piratas = ([Pirata])
+type Nombre = ([Char])
 
 pirataJack = ("Jack Sparrow", [("brujula", 10000), ("arena", 0)])
 pirataDavid = ("David Jones", [("cajita", 1)])
@@ -12,32 +13,33 @@ pirataWill = ("Will Turner", [("cuchillo", 5)])
 
 --cantidad de tesoros
 cant_tesoros :: Pirata -> Int
-cant_tesoros pirata = length (botin pirata)
+cant_tesoros pirata = length (snd pirata)
 
 --pirata afortunado
 valor_tesoros :: Pirata -> Int
-valor_tesoros Pirata = sum (map snd (snd Botin)) 
+valor_tesoros pirata = sum (map snd (snd pirata)) 
 
 pirata_afortunado :: Pirata -> Bool
-pirata_afortunado Pirata = valor_tesoros > 10000
+pirata_afortunado pirata = valor_tesoros > 10000
 
 --piratas con igual tesoro
-mismoN_distintoV :: [Pirata] -> [Pirata] -> Bool
-mismoN_distintoV pirata1 pirata2 = any (lotiene pirata 2) (tesoro pirata1)
+
+idem_tesoro_no_valor :: [Botin] -> [Botin] -> Bool
+idem_tesoro_no_valor (nombre1, valor1) (nombre2, valor2) = nombre1 == nombre2
 
 lotiene :: [Botin] -> [Botin] -> Bool
 lotiene pirata tesoro = any (idem_tesoro_no_valor) (tesoro pirata)
 
-idem_tesoro_no_valor :: [Botin] -> [Botin] -> Bool
-idem_tesoro_no_valor (nombre1, valor1) (nombre2, valor2) = nombre1 == nombre2
-	
+mismoN_distintoV :: [Pirata] -> [Pirata] -> Bool
+mismoN_distintoV pirata1 pirata2 = any (lotiene pirata2) (tesoro pirata1)
+
 --valor de tesoro mas valioso
 tesoro_mayor :: Pirata -> Int
 tesoro_mayor pirata = maximum(map snd snd) --snd segundo elemento de la tupla
 	
 --adquirir tesoro
 tesoro_nuevo :: Botin -> Botin
-tesoro_nuevo pirata (nombre, valor) = (botin pirata) ++ [(nombre, valor)]
+tesoro_nuevo botin (nombre, valor) = botin ++ (nombre, valor)
 
 -- tesoros valiosos
 tesoro_valioso :: Botin -> Botin
@@ -45,32 +47,40 @@ tesoro_valioso (nombre, valor) = valor > 100
 	
 -- pirata pierde tesoros valiosos
 tesoro_menos_valioso :: Botin -> Botin
-tesoro_menos_valioso (nombre, valor) = filter (not . tesoroEsValioso) (botin pirata)
+tesoro_menos_valioso botin = filter (not . tesoro_valioso) (botin)
 	
 -- tesoro x
-tesoro_nombre  :: Botin -> Botin
-tesoro_nombre (nombre, tesoro) = nombre == x
+tesoro_nombre  :: Botin -> [Char] 
+tesoro_nombre botin x = filter(botin) == x
 	
 --pirata pierde x tesoros
 tesoro_menos_x  :: Botin -> Botin
-tesoro_menos_x (nombre, valor) = filter (not . tesoro_nombre) (botin pirata)
+tesoro_menos_x botin = filter (not . tesoro_nombre) (botin)
 	
 
 ------------------------------------TEMPORADA DE SAQUEOS
+saquearTesorosValiosos :: Botin -> Botin
+saquearTesorosValiosos tesoro = filter(tesoro_valioso) tesoro 
 
-saquearTesorosValiosos tesoro = filter(tesoro_valioso) tesoro --filter: returns a list constructed from members of a list (the second argument) fulfilling a condition given by the first argument
+saquearTesorosX :: Botin -> Botin
 saquearTesorosX tesoro = filter(tesoro_nombre) tesoro
-saquearCorazon tesoro = []
-	
-saqueo_v_n x (n, v) = [saquearTesorosValiosos (v, n) || saquearTesorosX x(v, n)]
+
+saquearCorazon tesoro = [] -- es necesario?
+
+saqueo_v_n :: [Char] -> Botin -> Botin
+saqueo_v_n nombre botin = [saquearTesorosValiosos (botin) || saquearTesorosX nombre botin]
+
+saqueo_combinado :: [Char] -> Botin
 saqueo_combinado tesoro = filter(saqueo_v_n) tesoro
-saquear pirata forma tesoro = (botin pirata) ++ (forma tesoro)
+
+
+-- saquear pirata forma tesoro = (botin pirata) ++ (forma tesoro)
 	
 ------------------------------------NAVEGANDO LOS 7 MARES
 
 tripulación "Perla Negra" =[("Jack Sparrow"), ("Anne Bonny")]
 tripulación "Holandés Errante" = [("David Jones")]
 
-pirata_entra pirata barco = (tripulación barco) ++ pirata -- barco "Perla Negra", "Holandés Errante"
+pirata_entra pirata barco = (tripulación barco) ++ pirata 
 
-pirata_sale pirata barco = filter (pirata /=) (tripulacion barco)
+pirata_sale pirata barco = filter (pirata /=) (tripulación barco)
